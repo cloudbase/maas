@@ -1,0 +1,9 @@
+include "{{named_rndc_conf_path}}";
+
+# Zone declarations.
+{{for zone in zones}}
+zone "{{zone.zone_name}}" {
+    type master;
+    file "{{zone.target_path}}";
+};
+{{endfor}}

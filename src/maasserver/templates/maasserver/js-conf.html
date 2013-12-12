@@ -1,0 +1,28 @@
+<script type="text/javascript">
+<!--
+var YUI_config = {
+    debug: {% if YUI_DEBUG %}true{% else %}false{% endif %},
+    combine: true,
+    filter: {% if YUI_DEBUG %}'raw'{% else %}'min'{% endif %},
+    root: '',
+    base: '{% url "combo-yui" %}?',
+    comboBase: '{% url "combo-yui" %}?',
+};
+var MAAS_config = {
+    uris: {
+        login: '{% url "login" %}',
+        statics: '{{ STATIC_URL }}',
+        maas_handler: '{% url "maas_handler" %}',
+        nodes_handler: '{% url "nodes_handler" %}',
+        account_handler: '{% url "account_handler" %}'
+        },
+    debug: {% if YUI_DEBUG %}true{% else %}false{% endif %}
+};
+// -->
+</script>
+<script type="text/javascript"
+    src="{% url "combo-yui" %}?yui-base/yui-base-min.js">
+</script>
+<script type="text/javascript"
+    src="{% url "combo-maas" %}?{{ JS_LIST|join:"&" }}">
+</script>

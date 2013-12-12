@@ -1,0 +1,17 @@
+{% extends "maasserver/base.html" %}
+
+{% block title %}Add SSH key{% endblock %}
+{% block page-title %}Add SSH key{% endblock %}
+
+{% block content %}
+  <form action="." method="post" class="block auto-width">
+    {% csrf_token %}
+    <ul>
+    {% for field in form %}
+      {% include "maasserver/form_field.html" %}
+    {% endfor %}
+    </ul>
+    <a class="link-button" href="{% url 'prefs' %}">Cancel</a>
+    <input type="submit" class="right" value="+ Add key" />
+  </form>
+{% endblock %}

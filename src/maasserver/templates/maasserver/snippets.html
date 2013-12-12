@@ -1,0 +1,52 @@
+<script type="text/x-template" id="add-macaddress">
+  <p>
+    <label for="id_mac_addresses">Mac address</label>
+    <input type="text" maxlength="30" name="mac_addresses"
+           id="id_mac_addresses" />
+    <div class="field-help">e.g AA:BB:CC:DD:EE:FF</div>
+  </p>
+</script>
+<script type="text/x-template" id="add-node">
+  <p>
+    <label for="id_hostname">Hostname
+      <span class="form-optional">(optional)</span>
+    </label>
+    {{ node_form.hostname }}
+    <div class="field-help">Default is MAC-based, e.g. "node-aabbccddeeff"
+    </div>
+  </p>
+  <p>
+    <label for="id_after_commissioning_action">After commissioning</label>
+    {{ node_form.after_commissioning_action }}
+  </p>
+  <p>
+    <label for="id_distro_series">Release</label>
+    {{ node_form.distro_series }}
+  </p>
+  <p>
+    <label for="id_architecture">Architecture</label>
+    {{ node_form.architecture }}
+  </p>
+  <p>
+    <label for="id_nodegroup">Node group</label>
+    {{ node_form.nodegroup }}
+  </p>
+  {% if node_form.power_type %}
+    <p>
+      <label for="id_power_type">Power type</label>
+      {{ node_form.power_type }}
+    </p>
+    <p class="power_parameters">
+      <label for="id_power_parameters">Power parameters</label>
+      {{ node_form.power_parameters }}
+    </p>
+  {% endif %}
+</script>
+{% for power_type, fieldset in POWER_TYPE_PARAMETERS_FIELDS %}
+  <script type="text/x-template" id="power-param-form-{{ power_type}}">
+    {{ fieldset }}
+  </script>
+{% endfor %}
+<script type="text/x-template" id="power-param-form-">
+</script>
+

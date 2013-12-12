@@ -1,0 +1,4 @@
+--python-kinds=-iv
+--exclude=*.js
+--extra=+f
+--links=yes

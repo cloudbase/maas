@@ -1,0 +1,10 @@
+graft src/*/static
+graft src/*/templates
+graft src/*/fixtures
+graft src/*/specs
+graft src/provisioningserver/*
+graft src/metadataserver/commissioning
+prune src/*/testing
+prune src/*/tests
+prune src/maastesting
+prune src/provisioningserver/*/tests

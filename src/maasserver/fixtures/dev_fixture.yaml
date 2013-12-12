@@ -1,0 +1,192 @@
+- fields: {
+    created: 2012-01-24, hostname: sun, architecture: 'i386/generic',
+    owner: null, status: 0, nodegroup: null, tags: [30],
+    cpu_count: 16, memory: 16384, storage: 1024,
+    system_id: node-2666dd64-4671-11e1-93b8-00225f89f211,
+    updated: !!timestamp '2012-01-24 10:52:38.735954'}
+  model: maasserver.node
+  pk: 15
+- fields: {
+    created: 2012-01-24, hostname: moon, architecture: 'i386/generic',
+    owner: null, status: 2, nodegroup: null, tags: [],
+    cpu_count: 1, memory: 512, storage: 1024,
+    system_id: node-29d7ad70-4671-11e1-93b8-00225f89f211,
+    updated: !!timestamp '2012-01-24 10:52:44.507777'}
+  model: maasserver.node
+  pk: 16
+- fields: {
+    created: 2012-01-24, hostname: mars, architecture: 'i386/generic',
+    owner: 106, status: 3, nodegroup: null, tags: [31],
+    cpu_count: 2, memory: 2096, storage: 8096,
+    system_id: node-2d424b28-4671-11e1-93b8-00225f89f211,
+    updated: !!timestamp '2012-01-24 10:52:50.239704'}
+  model: maasserver.node
+  pk: 17
+- fields: {
+    created: 2012-01-24, hostname: jupiter, architecture: 'i386/generic',
+    owner: null, status: 0, nodegroup: null, tags: [30, 31],
+    cpu_count: 4, memory: 8192, storage: 8096,
+    system_id: node-2fb4fec8-4671-11e1-93b8-00225f89f211,
+    updated: !!timestamp '2012-01-24 10:52:54.346832'}
+  model: maasserver.node
+  pk: 18
+- fields: {
+    created: 2012-01-24, hostname: saturn, architecture: 'i386/generic',
+    owner: 101, status: 3, nodegroup: null, tags: [30, 31, 32],
+    cpu_count: 4, memory: 4096, storage: 8096,
+    system_id: node-33b55e28-4671-11e1-93b8-00225f89f211,
+    updated: !!timestamp '2012-01-24 10:53:01.060176'}
+  model: maasserver.node
+  pk: 19
+- fields: {created: 2012-01-24, mac_address: '08:34:2a:b5:8a:45', node: 15, updated: !!timestamp '2012-01-24
+      11:00:59.951873'}
+  model: maasserver.macaddress
+  pk: 1
+- fields: {created: 2012-01-24, mac_address: '08:05:44:c7:bb:45', node: 16, updated: !!timestamp '2012-01-24
+      11:01:23.998278'}
+  model: maasserver.macaddress
+  pk: 2
+- fields: {created: 2012-01-24, mac_address: '54:67:a4:33:7d:12', node: 17, updated: !!timestamp '2012-01-24
+      11:01:52.489555'}
+  model: maasserver.macaddress
+  pk: 3
+- fields: {created: 2012-01-24, mac_address: 'aa:bb:33:44:f7:13', node: 18, updated: !!timestamp '2012-01-24
+      11:02:11.911591'}
+  model: maasserver.macaddress
+  pk: 4
+- fields: {created: 2012-01-24, mac_address: 'c6:78:43:c3:12:8a', node: 19, updated: !!timestamp '2012-01-24
+      11:02:29.587380'}
+  model: maasserver.macaddress
+  pk: 5
+- fields: {created: 2012-01-24, mac_address: 'dd:67:33:33:1a:bb', node: 15, updated: !!timestamp '2012-01-24
+      11:06:41.632158'}
+  model: maasserver.macaddress
+  pk: 6
+- fields:
+    name: big
+    definition: "\"LARGER THAN earth\""
+    comment: ''
+    created: 2012-10-02
+    updated: 2012-10-02
+  model: maasserver.tag
+  pk: 30
+- fields:
+    name: planet
+    definition: "\"ORBITS star AND it's complicated\""
+    comment: 'Seriously, "clearing the neighbourhood"...'
+    created: 2012-10-02
+    updated: 2012-10-02
+  model: maasserver.tag
+  pk: 31
+- fields:
+    name: ringed
+    definition: "\"HAS prominent ring system\""
+    comment: 'Excludes the rings of Jupiter.'
+    created: 2012-10-02
+    updated: 2012-10-02
+  model: maasserver.tag
+  pk: 32
+- fields:
+    date_joined: 2012-01-23 11:52:14
+    email: admin@example.com
+    first_name: ''
+    groups: []
+    is_active: true
+    is_staff: true
+    is_superuser: true
+    last_login: 2012-01-24 09:45:50
+    last_name: ''
+    password: md5$uZic1a8frlfp$5eb190821d99ca2a68ec2f5bd46b4ae7
+    user_permissions: []
+    username: admin
+  model: auth.user
+  pk: 101
+- fields:
+    date_joined: 2012-01-24 10:49:41
+    email: gaston@example.com
+    first_name: ''
+    groups: []
+    is_active: true
+    is_staff: false
+    is_superuser: false
+    last_login: 2012-01-24 10:49:41
+    last_name: ''
+    password: md5$uZic1a8frlfp$5eb190821d99ca2a68ec2f5bd46b4ae7
+    user_permissions: []
+    username: gaston
+  model: auth.user
+  pk: 102
+- fields:
+    date_joined: 2012-01-24 10:50:03
+    email: dave@example.com
+    first_name: ''
+    groups: []
+    is_active: true
+    is_staff: false
+    is_superuser: false
+    last_login: 2012-01-24 10:50:03
+    last_name: ''
+    password: md5$uZic1a8frlfp$5eb190821d99ca2a68ec2f5bd46b4ae7
+    user_permissions: []
+    username: dave
+  model: auth.user
+  pk: 103
+- fields:
+    date_joined: 2012-01-24 10:50:21
+    email: raph@example.com
+    first_name: ''
+    groups: []
+    is_active: true
+    is_staff: false
+    is_superuser: false
+    last_login: 2012-01-24 10:50:21
+    last_name: ''
+    password: md5$uZic1a8frlfp$5eb190821d99ca2a68ec2f5bd46b4ae7
+    user_permissions: []
+    username: raph
+  model: auth.user
+  pk: 104
+- fields:
+    date_joined: 2012-01-24 10:50:38
+    email: diane@example.com
+    first_name: ''
+    groups: []
+    is_active: true
+    is_staff: false
+    is_superuser: false
+    last_login: 2012-01-24 10:50:38
+    last_name: ''
+    password: md5$uZic1a8frlfp$5eb190821d99ca2a68ec2f5bd46b4ae7
+    user_permissions: []
+    username: diane
+  model: auth.user
+  pk: 105
+- fields:
+    date_joined: 2012-01-24 10:50:53
+    email: test@example.com
+    first_name: ''
+    groups: []
+    is_active: true
+    is_staff: false
+    is_superuser: false
+    last_login: 2012-01-24 10:50:53
+    last_name: ''
+    password: md5$uZic1a8frlfp$5eb190821d99ca2a68ec2f5bd46b4ae7
+    user_permissions: []
+    username: test
+  model: auth.user
+  pk: 106
+- fields:
+    created: !!timestamp '2013-12-10 12:53:49.004420'
+    updated: !!timestamp '2013-12-10 12:53:49.004420'
+    description: Description of zone a
+    name: zone-a
+  model: maasserver.zone
+  pk: 3
+- fields:
+    created: !!timestamp '2013-12-10 12:53:49.004420'
+    updated: !!timestamp '2013-12-10 12:53:49.004420'
+    description: Description of zone b
+    name: zone-b
+  model: maasserver.zone
+  pk: 4

@@ -1,0 +1,200 @@
+{% extends "maasserver/base.html" %}
+
+{% block nav-active-settings %}active{% endblock %}
+{% block title %}Node: {{ node.fqdn }}{% endblock %}
+{% block page-title %}Node: {{ node.fqdn }}{% endblock %}
+{% block layout-modifiers %}sidebar{% endblock %}
+
+{% block head %}
+  {# Add expander icon to LLDP expander's button URL. #}
+  {# Done as CSS classes, not by DOM manipulation, because: #}
+  {# 1. The icon must be part of the clickable link. #}
+  {# 2. Browsers pre-load CSS backgrounds, avoiding a glitch on first use. #}
+  {# 3. It's easy. #}
+  <style type="text/css">
+    #lldp-trigger.expander-shown {
+      background: url({{ STATIC_URL }}img/treeExpanded.png) left no-repeat;
+      padding-left: 15px;
+    }
+    #lldp-trigger.expander-hidden {
+      background: url({{ STATIC_URL }}img/treeCollapsed.png) left no-repeat;
+      padding-left: 15px;
+    }
+  </style>
+  <script type="text/javascript">
+    <!--
+      var show_text = "Show discovered details",
+          hide_text = "Hide discovered details",
+          shown_class = "expander-shown",
+          hidden_class = "expander-hidden";
+      YUI().use('maas.reveal', function (Y) {
+        Y.on('domready', function() {
+          {# Set up a Reveal widget for the probed details output. #}
+          var trigger = Y.one('#details-trigger');
+          var expander = new Y.maas.reveal.Reveal({
+            targetNode: Y.one('#details-output'),
+            linkNode: trigger,
+            showText: show_text,
+            hideText: hide_text
+          });
+          {# Update the widget's expander icon. #}
+          expander.on('revealing', function() {
+            trigger.replaceClass(hidden_class, shown_class);
+          });
+          expander.on('hiding', function() {
+            trigger.replaceClass(shown_class, hidden_class);
+          });
+          {# The widget renders in its hidden state. #}
+          expander.render();
+        });
+      });
+    // -->
+  </script>
+{% endblock %}
+
+{% block sidebar %}
+  <h4>Node details</h4>
+    {% if can_edit %}
+      <a href="{% url 'node-edit' node.system_id %}" class="button secondary">
+        Edit node
+      </a>
+    {% endif %}
+    <a href="{% url 'node-preseed-view' node.system_id %}" class="button secondary">
+      View preseed
+    </a>
+  {% if form.action_buttons %}
+    <h4>Actions</h4>
+    <form id="node_actions" method="post" action=".">{% csrf_token %}
+      {% for action in form.action_buttons %}
+        <button
+          class="secondary
+                 {% if action.inhibition %}disabled{% endif %}
+                 {% if not forloop.first %}space-top{% endif %}"
+          type="submit"
+          name="{{ form.input_name }}"
+          value="{{ action.name }}"
+          {% if action.inhibition %}}
+            title="{{ action.inhibition }}"
+            disabled="disabled"
+          {% endif %} >
+          {{ action.display }}
+        </button>
+      {% endfor %}
+    </form>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div id="content-with-sidebar">
+  <ul class="data-list">
+    <li class="block size3 first">
+      <h4><acronym title="Fully Qualified Domain Name">FQDN</acronym></h4>
+        <span>{{ node.fqdn }}</span>
+    </li>
+    <li class="block size3">
+      <h4>MAC addresses</h4>
+      <span>{{ node.macaddress_set.all|join:", " }}</span>
+    </li>
+    <li class="block size3">
+      <h4>Status</h4>
+      <span>
+          {{ node.display_status }}
+      </span>
+    </li>
+    <li class="block first size3">
+      <h4>Architecture</h4>
+      <span>
+          {{ node.architecture }}
+      </span>
+    </li>
+    <li class="block size3">
+      <h4>CPU Count</h4>
+      <span>
+          {{ node.cpu_count }}
+      </span>
+    </li>
+    <li class="block size3">
+      <h4>Memory</h4>
+      <span>
+          {{ node.memory }} MB
+      </span>
+    </li>
+    <li class="block size3 first">
+      <h4>Tags</h4>
+      <span id="node_tags">
+          {% for tag in node.tags.all %}
+            <a href="{% url 'tag-view' tag.name %}">{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+          {% if not node.tags.all %}
+            None
+          {% endif %}
+      </span>
+    </li>
+    {% with ip_addresses=node.ip_addresses %}
+    {% if ip_addresses|length %}
+    <li class="block size3">
+      <h4>IP addresses</h4>
+      <span>
+          {% for ip in ip_addresses %}
+          {{ ip }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+      </span>
+    </li>
+    {% endif %}
+    {% endwith %}
+    {% if kernel_opts.value %}
+    <li class="block size10 first">
+      <h4>Kernel Parameters
+        {% if kernel_opts.is_global %}
+        - from: <a class="kernelopts-global-link" href="{% url 'settings' %}">Global Kernel Parameters</a>
+        {% elif kernel_opts.is_tag %}
+        - from tag: <span><a class="kernelopts-tag-link" href="{% url 'tag-view' kernel_opts.tag.name %}">{{ kernel_opts.tag.name }}</a></span>
+        {% endif %}
+      </h4>
+      <span id="node_kernel_opts">
+        {{ kernel_opts.value }}
+      </span>
+    </li>
+    {% endif %}
+    {% if error_text %}
+    <li class="block first">
+      <h4>Error output</h4>
+      <span>{{ error_text }}</span>
+    </li>
+    {% endif %}
+    {% if status_text %}
+    <li class="block first">
+      <h4>Console output</h4>
+      <span>{{ status_text }}</span>
+    </li>
+    {% endif %}
+    {% if node.owner %}
+    <li class="block size2">
+      <h4>Owner</h4>
+      <span>{{ node.owner }}</span>
+    </li>
+    {% endif %}
+    {% if node.routers %}
+      <li id="routers" class="block first size3">
+        <h4>Switch MAC addresses</h4>
+        <span>{{ node.routers|join:", " }}</span>
+      </li>
+    {% endif %}
+    {% if probed_details %}
+      <li class="block first separate">
+        <h2>Raw discovery data</h2>
+      </li>
+      <li class="block first pad-top-small">
+        {# Button link for the Reveal widget that shows/hides LLDP output. #}
+        <a href="#" id="details-trigger"></a>
+        {# Content div for the probed details output. #}
+        <div id="details-output">
+          {# The Reveal widget needs a content tag inside the content div. #}
+          <pre>{{ probed_details }}</pre>
+        </div>
+      </li>
+    {% endif %}
+  </ul>
+  <div class="clear"></div>
+  </div>
+{% endblock %}

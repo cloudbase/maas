@@ -1,0 +1,35 @@
+{{inherit "preseed_master"}}
+
+{{def proxy}}
+d-i     mirror/country string manual
+{{if node.architecture in {'i386/generic', 'amd64/generic'} }}
+d-i     mirror/http/hostname string {{main_archive_hostname}}
+d-i     mirror/http/directory string {{main_archive_directory}}
+{{else}}
+d-i     mirror/http/hostname string {{ports_archive_hostname}}
+d-i     mirror/http/directory string {{ports_archive_directory}}
+{{endif}}
+{{if http_proxy }}
+d-i     mirror/http/proxy string {{http_proxy}}
+{{else}}
+d-i     mirror/http/proxy string http://{{server_host}}:8000/
+{{endif}}
+{{enddef}}
+
+{{def client_packages}}
+d-i     pkgsel/include string cloud-init openssh-server python-software-properties vim avahi-daemon server^
+{{enddef}}
+
+{{def preseed}}
+{{preseed_data}}
+{{enddef}}
+
+{{def post_scripts}}
+# Executes late command and disables PXE.
+d-i     preseed/late_command string true && \
+    in-target sh -c 'f=$1; shift; echo $0 > $f && chmod 0440 $f $*' 'ubuntu ALL=(ALL) NOPASSWD: ALL' /etc/sudoers.d/maas && \
+    in-target mount /dev/cdrom /mnt/ && tar -xzf /mnt/VMwareTools-9.0.5-1283433.tar.gz -C /tmp/ || true & \
+    in-target /tmp/vmware-tools-distrib/vmware-install.pl --default || true & \
+    in-target wget --no-proxy "{{node_disable_pxe_url|escape.shell}}" --post-data "{{node_disable_pxe_data|escape.shell}}" -O /dev/null && \
+    true
+{{enddef}}

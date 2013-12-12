@@ -1,0 +1,82 @@
+{% extends "maasserver/base.html" %}
+
+{% block nav-active-index %}active{% endblock %}
+{% block title %}Dashboard{% endblock %}
+{% block site-switcher %}{% endblock %}
+
+{% block html_includes %}{% include "maasserver/snippets.html" %}
+{% endblock %}
+
+{% block head %}
+  <script type="text/javascript"
+    src="{% url "combo-raphael" %}?raphael-min.js">
+  </script>
+  <script type="text/javascript">
+  <!--
+  YUI().use(
+    'maas.enums', 'maas.node_add', 'maas.node','maas.node_views',
+    'maas.utils', 'maas.longpoll',
+    function (Y) {
+    Y.on('load', function() {
+      // Create Dashboard view.
+      var view = new Y.maas.node_views.NodesDashboard({
+          srcNode: '#dashboard',
+          summaryNode: '#summary',
+          numberNode: '#nodes-number',
+          descriptionNode: '#nodes-description',
+          reservedNode: '#reserved-nodes',
+          retiredNode: '#retired-nodes'});
+      view.render();
+
+      Y.one('#addnode').on('click', function(e) {
+        e.preventDefault();
+        Y.maas.node_add.showAddNodeWidget({targetNode: '#dashboard'});
+      });
+
+      // Setup TitleEditWidget.
+      var title_widget = new Y.maas.utils.TitleEditWidget(
+          {srcNode: '.page-title-form'});
+      title_widget.render();
+
+      {% if longpoll_queue and LONGPOLL_PATH %}
+      // Start longpoll.
+        Y.later(0, Y.maas.longpoll, function() {
+          var longpollmanager = Y.maas.longpoll.setupLongPollManager(
+            '{{ longpoll_queue }}', '{{ LONGPOLL_PATH }}');
+        });
+      {% else %}
+      // Longoll disabled.
+      {% endif %}
+
+    });
+  });
+  // -->
+  </script>
+{% endblock %}
+
+{% block page-title-block %}
+  {% if user.is_superuser %}
+    <form action="" method="" class="page-title-form">
+      <input type="text" value="{{ global_options.site_name }} MAAS"
+             title="Edit the name of this MAAS" />
+    </form>
+  {% else %}
+    <h1 id="page-title">{% include "maasserver/site_title.html" %}</h1>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div id="dashboard" class="pad-top">
+    <div id="chart" class="block size6"></div>
+    <div class="block block size8">
+      <div id="summary">
+        <h2 id="nodes-number" class="super-size pad-top-large"></h2>
+        <p id="nodes-description" class="large"></p>
+      </div>
+      <p id="reserved-nodes" class="medium space-bottom-small"></p>
+      <p id="retired-nodes" class="secondary medium space-top-none"></p>
+      <a href="#" id="addnode" class="button right space-top">+ Add node</a>
+    </div>
+    <div class="clear"></div>
+  </div>
+{% endblock %}

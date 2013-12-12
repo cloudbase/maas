@@ -1,0 +1,110 @@
+{% extends "maasserver/base.html" %}
+
+{% block nav-active-settings %}active{% endblock %}
+{% block title %}Edit node{% endblock %}
+{% block page-title %}Edit node{% endblock %}
+
+{% block html_includes %}{% include "maasserver/snippets.html" %}
+{% endblock %}
+
+{% block head %}
+  <script type="text/javascript">
+  YUI().use(
+    'node', 'maas.enums', function(Y){
+      var os = Y.one('#id_series_choices');
+      var series = Y.one('#id_distro_series');
+      function repopulate(e){
+          var value = os.get('options');
+          value.each(
+              function(){
+                  var selected = this.get("selected");
+                  var value = this.get("value");
+                  if (selected){
+                      if ( value == "ubuntu"){
+                          var new_vals = Y.maas.enums.UBUNTU_SERIES;
+                      }else if ( value == "windows"){
+                          var new_vals = Y.maas.enums.WINDOWS_SERIES;
+                      }else if ( value == "centos"){
+                          var new_vals = Y.maas.enums.CENTOS_SERIES;
+                      }else if ( value == "all"){
+                          var new_vals = Y.maas.enums.DISTRO_SERIES;
+                      }
+                      series.get('options').each(
+                        function(){
+                          var serie_val = this.get("value");
+                          console.log(serie_val);
+                          var found = false;
+                          for (x in new_vals){
+                            if(new_vals[x] == serie_val){
+                              found = true;
+                            }
+                          }
+                          if (found == false){
+                            this.setAttribute("class", "hidden");
+                          }else{
+                            this.removeAttribute("class");
+                          }
+                        }
+                      );
+                  }
+              }
+          );
+      }
+        os.on('change', repopulate);
+    });
+  <!--
+  YUI().use(
+    'maas.enums', 'maas.power_parameters',
+    function (Y) {
+    Y.on('load', function() {
+      // Create LinkedContentWidget widget so that the power_parameter field
+      // will be updated each time the value of the power_type field changes.
+      var widget = new Y.maas.power_parameters.LinkedContentWidget({
+          srcNode: '.power_parameters',
+          driverEnum: Y.maas.enums.POWER_TYPE,
+          templatePrefix: '#power-param-form-'
+          });
+      widget.bindTo(Y.one('.power_type').one('select'), 'change');
+      widget.render();
+    });
+  });
+  // -->
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div id="node-edit" class="block size7">
+  <form action="." method="post" class="block auto-width">
+    {% csrf_token %}
+    <ul>
+      {% for field in form %}
+        {% include "maasserver/form_field.html" %}
+      {% endfor %}
+      <li>
+        <label for="id_mac_addresses">MAC addresses</label>
+        {% for macaddress in node.macaddress_set.all %}
+        <p>
+        {{ macaddress }}&nbsp;&nbsp;
+        <a title="Delete mac address"
+           class="icon"
+           href="{% url 'mac-delete' macaddress.node.system_id macaddress.mac_address %}">
+          <img src="{{ STATIC_URL }}img/delete.png" alt="delete" />
+        </a>
+        </p>
+        {% empty %}
+          No MAC address.
+        {% endfor %}
+      </li>
+      <li>
+        <a class="add-link add-mac-form"
+           href="{% url 'mac-add' node.system_id %}">
+          <img src="{{ STATIC_URL }}img/inline_add.png" alt="+" class="icon" />
+          Add additional MAC address
+        </a>
+      </li>
+    </ul>
+    <input type="submit" value="Save node" class="right" />
+    <a class="link-button" href="{% url 'node-view' node.system_id %}">Cancel</a>
+  </form>
+  </div>
+{% endblock %}
